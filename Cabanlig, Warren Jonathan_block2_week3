@@ -1,0 +1,110 @@
+<?php
+
+// Base class Vehicle
+class Vehicle {
+    protected $make;
+    protected $model;
+    protected $year;
+
+    public function __construct($make, $model, $year) {
+        $this->make = $make;
+        $this->model = $model;
+        $this->year = $year;
+    }
+
+    // Final method to prevent overriding
+    final public function getDetails() {
+        echo "Vehicle Details: $this->year $this->make $this->model\n";
+    }
+
+    public function startEngine() {
+        echo "Engine started.\n";
+    }
+}
+
+// Car class extending Vehicle
+class Car extends Vehicle {
+    private $numberOfDoors;
+
+    public function __construct($make, $model, $year, $numberOfDoors) {
+        parent::__construct($make, $model, $year);
+        $this->numberOfDoors = $numberOfDoors;
+    }
+
+    public function startEngine() {
+        echo "Car engine started with a key or button press.\n";
+    }
+}
+
+// Motorcycle class extending Vehicle
+final class Motorcycle extends Vehicle {
+    private $hasSidecar;
+
+    public function __construct($make, $model, $year, $hasSidecar) {
+        parent::__construct($make, $model, $year);
+        $this->hasSidecar = $hasSidecar;
+    }
+
+    public function startEngine() {
+        echo "Motorcycle engine started with a kick or button press.\n";
+    }
+
+    public function getHasSidecar() {
+        return $this->hasSidecar ? "Yes" : "No";
+    }
+}
+
+// Interface ElectricVehicle
+interface ElectricVehicle {
+    public function chargeBattery($percentage);
+    public function getBatteryLevel();
+}
+
+// ElectricCar class extending Car and implementing ElectricVehicle
+class ElectricCar extends Car implements ElectricVehicle {
+    private $batteryLevel;
+
+    public function __construct($make, $model, $year, $numberOfDoors, $batteryLevel = 100) {
+        parent::__construct($make, $model, $year, $numberOfDoors);
+        $this->batteryLevel = $batteryLevel;
+    }
+
+    public function chargeBattery($percentage) {
+        $this->batteryLevel = min(100, $this->batteryLevel + $percentage);
+        echo "Battery charged to $this->batteryLevel%.\n";
+    }
+
+    public function getBatteryLevel() {
+        return $this->batteryLevel;
+    }
+
+    public function startEngine() {
+        echo "Electric car engine started silently.\n";
+    }
+}
+
+// Testing the implementation
+
+// Create an instance of Car
+$car = new Car("Toyota", "Camry", 2020, 4);
+$car->getDetails();  // Display car details
+$car->startEngine(); // Car-specific engine start
+
+echo "\n";
+
+// Create an instance of Motorcycle
+$motorcycle = new Motorcycle("Harley-Davidson", "Sportster", 2018, false);
+$motorcycle->getDetails();  // Display motorcycle details
+$motorcycle->startEngine(); // Motorcycle-specific engine start
+echo "Has Sidecar: " . $motorcycle->getHasSidecar() . "\n"; // Check for sidecar
+
+echo "\n";
+
+// Create an instance of ElectricCar
+$electricCar = new ElectricCar("Tesla", "Model S", 2023, 4);
+$electricCar->getDetails();  // Display electric car details
+$electricCar->startEngine(); // Electric car-specific engine start
+$electricCar->chargeBattery(20);  // Charge battery
+echo "Battery Level: " . $electricCar->getBatteryLevel() . "%\n"; // Display battery level
+
+?>
